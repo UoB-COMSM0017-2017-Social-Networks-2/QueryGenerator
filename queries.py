@@ -79,18 +79,24 @@ def query_tweets(query,tweets):
             key = 0
     return tweets_queried
 
-# test
-topic = "A Trump he is and and or 4+- cats."
-tweets = ["Donald Trump catches 4 cats in the frontdoor of his house.","I am a dog lover","cute #cat and me","Donald #Trump his cat","@Donald Trump cat","Donald Trump has little cat inside his room http://","Donald Trump raises these small cat in White house."]
-print 'original topic: '+topic+'\n'
-modified_topic = word_filter(topic)
-print 'modified topic: '+modified_topic+'\n'
-new_topic = retopic_tweets(modified_topic, tweets)
-print 'new topic: '+new_topic+'\n'
-query = list()
-#query = query_request_format(modified_topic)
-query = keyword_query(modified_topic)
-#query = keyword_query(new_topic)
-print 'query: '+ str(query)+'\n'
-tweets_queried = query_tweets(query,tweets)
-print 'tweets: '+str(tweets_queried)+'\n'
+def main(topics,tweets):
+    topic2query = dict()
+    topic2query["data"] = list()
+    for topic in topics:
+        query = list()
+        modified_topic = word_filter(topic)
+        new_topic = retopic_tweets(modified_topic, tweets)
+        query = keyword_query(modified_topic, query)
+        query = keyword_query(new_topic, query)
+        topic2query["data"].append({
+                "topic": topic,
+                "query": query
+
+        })
+    print json.dumps(topic2query, sort_keys=False, indent=4, separators=(',', ': '))
+
+if __name__ == "__main__":
+    # test
+    #topics = ["A Trump he is and and or 4+- cats.","Donald and his cats"]
+    #tweets = ["Donald Trump catches 4 cats in the frontdoor of his house.","I am a dog lover","cute #cat and me","Donald #Trump his cat","@Donald Trump cat","Donald Trump has little cat inside his room http://","Donald Trump raises these small cat in White house."]
+    main(topics,tweets)
